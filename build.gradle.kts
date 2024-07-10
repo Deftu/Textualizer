@@ -24,6 +24,8 @@ if (mcData.isForgeLike && mcData.version >= MinecraftVersion.VERSION_1_16_5) {
 }
 
 toolkitReleases {
+    detectVersionType.set(true)
+
     modrinth {
         projectId.set("UhitUcEo")
         if (mcData.loader == ModLoader.FABRIC) {
