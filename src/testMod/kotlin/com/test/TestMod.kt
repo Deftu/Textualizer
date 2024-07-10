@@ -76,7 +76,7 @@ class TestMod : ClientModInitializer {
             }
         }, 10_000)
         //#if FABRIC || MC <= 1.12.2
-        keyBinding.register()
+        keyBinding.attemptRegister()
         //#endif
     }
 
