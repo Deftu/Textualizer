@@ -1,22 +1,40 @@
 package dev.deftu.textualizer
 
-//#if MC <= 1.12.2
-//$$ import net.minecraftforge.fml.common.Loader
-//$$ import net.minecraftforge.fml.common.ModContainer
-//$$ import net.minecraftforge.fml.common.ModMetadata
+//#if FORGE-LIKE && MC >= 1.16.5
+//$$ import cpw.mods.modlauncher.Launcher
 //#endif
 
 import dev.deftu.omnicore.client.OmniClient
-import dev.deftu.omnicore.common.OmniIdentifier
+import dev.deftu.omnicore.common.OmniLoader
 import net.minecraft.client.MinecraftClient
 import net.minecraft.resource.ReloadableResourceManagerImpl
 import net.minecraft.resource.ResourceManager
 import net.minecraft.resource.SynchronousResourceReloader
+import java.io.InputStream
 import java.util.*
 
 public object LanguageManager : SynchronousResourceReloader {
 
     private const val DEFAULT_LANGUAGE: String = "en_us"
+
+    //#if FORGE-LIKE && MC >= 1.16.5
+    //$$ private val modLauncherClassLoader: ClassLoader
+    //$$     get() {
+    //$$         val launcher = Launcher.INSTANCE
+    //$$         val field = launcher.javaClass.getDeclaredField("classLoader")
+    //$$         field.isAccessible = true
+    //$$         return field.get(launcher) as ClassLoader
+    //$$     }
+    //#endif
+
+    private val isDebug: Boolean
+        get() = System.getProperty("textualizer.debug")?.toBoolean() ?: false
+
+    private val isLoadDebug: Boolean
+        get() = isDebug || System.getProperty("textualizer.debug.load")?.toBoolean() ?: false
+
+    private val isTranslationDebug: Boolean
+        get() = isDebug || System.getProperty("textualizer.debug.translation")?.toBoolean() ?: false
 
     public var isInitialized: Boolean = false
         private set
@@ -81,6 +99,11 @@ public object LanguageManager : SynchronousResourceReloader {
         //#if MC <= 1.12.2
         //$$ LocalePropertiesManipulator.replace(language)
         //#endif
+
+        if (isLoadDebug) {
+            println("Current language: $currentLanguage")
+            println("Loaded languages: ${loadedLanguages.joinToString(", ")}")
+        }
     }
 
     private fun loadLanguage(
@@ -97,33 +120,91 @@ public object LanguageManager : SynchronousResourceReloader {
                 splitLanguage.drop(1).forEach { part -> append("_${part.uppercase(Locale.ENGLISH)}") }
             }
 
+            if (isTranslationDebug) {
+                println("Loading language: $language")
+            }
+
+            val loadedPaths = mutableSetOf<String>()
             val path = "languages/$mutatedLanguage.json"
+
+            // Attempt to load through class loader using namespaces
             for (namespace in resourceManager.allNamespaces) {
+                val fullPath = "/assets/$namespace/$path"
+                if (fullPath in loadedPaths) {
+                    if (isTranslationDebug) {
+                        println("Skipping language from namespace: $language from $namespace")
+                    }
+
+                    continue
+                }
+
                 try {
-                    val fullPath = "/assets/$namespace/$path"
-                    LanguageManager::class.java.getResourceAsStream(fullPath)?.use { inputStream ->
-                        Language.load(inputStream, result::put)
+                    val inputStream = getResource(fullPath)
+                    println("Loaded language from namespace: $language from $namespace - $inputStream")
+                    if (inputStream == null) {
+                        if (isTranslationDebug) {
+                            println("Did not load translations: $language from $namespace")
+                        }
+
+                        loadedPaths.add(fullPath)
+                        continue
+                    }
+
+                    Language.load(inputStream, result::put)
+                    loadedPaths.add(fullPath)
+                    inputStream.close()
+                    if (isTranslationDebug) {
+                        println("Loaded language from namespace: $language from $namespace")
                     }
                 } catch (t: Throwable) {
                     t.printStackTrace()
                 }
             }
 
-            //#if MC <= 1.12.2
-            //$$ for (modId in Loader.instance().modList.map(ModContainer::getMetadata).map(ModMetadata::modId)) {
-            //$$     try {
-            //$$         val fullPath = "/assets/$modId/$path"
-            //$$         LanguageManager::class.java.getResourceAsStream(fullPath)?.use { inputStream ->
-            //$$             Language.load(inputStream, result::put)
-            //$$         }
-            //$$     } catch (t: Throwable) {
-            //$$         t.printStackTrace()
-            //$$     }
-            //$$ }
-            //#endif
+            // Attempt to load through class loader using mod IDs
+            for (modId in OmniLoader.getLoadedMods().map(OmniLoader.ModInfo::id)) {
+                val fullPath = "/assets/$modId/$path"
+                if (fullPath in loadedPaths) {
+                    if (isTranslationDebug) {
+                        println("Skipping language from mod ID: $language from $modId")
+                    }
+
+                    continue
+                }
+
+                try {
+                    val inputStream = getResource(fullPath)
+                    if (inputStream == null) {
+                        if (isTranslationDebug) {
+                            println("Did not load translations: $language from $modId")
+                        }
+
+                        loadedPaths.add(fullPath)
+                        continue
+                    }
+
+                    Language.load(inputStream, result::put)
+                    loadedPaths.add(fullPath)
+                    inputStream.close()
+                    if (isTranslationDebug) {
+                        println("Loaded language from mod ID: $language from $modId")
+                    }
+                } catch (t: Throwable) {
+                    t.printStackTrace()
+                }
+            }
         }
 
         return Language(isRightToLeft, result)
+    }
+
+    private fun getResource(path: String): InputStream? {
+        //#if FABRIC || MC <= 1.12.2
+        return this::class.java.getResourceAsStream(path)
+        //#else
+        //$$ println(modLauncherClassLoader)
+        //$$ return modLauncherClassLoader.getResourceAsStream(path)
+        //#endif
     }
 
 }

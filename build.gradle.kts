@@ -47,6 +47,10 @@ toolkitReleases {
     }
 }
 
+repositories {
+    maven("https://maven.neoforged.net/releases")
+}
+
 dependencies {
     val textileVersion = "0.5.1"
     api("dev.deftu:textile:$textileVersion")
@@ -56,5 +60,7 @@ dependencies {
     if (mcData.isFabric) {
         modImplementation("net.fabricmc.fabric-api:fabric-api:${mcData.dependencies.fabric.fabricApiVersion}")
         modImplementation("net.fabricmc:fabric-language-kotlin:${mcData.dependencies.fabric.fabricLanguageKotlinVersion}")
+    } else if (mcData.isForgeLike) {
+        implementation("cpw.mods:modlauncher:8.1.3")
     }
 }
