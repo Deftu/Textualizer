@@ -1,5 +1,5 @@
 modLoader="javafml"
-loaderVersion="[31,)"
+loaderVersion="[1,)"
 issueTrackerURL="https://github.com/Deftu/${mod_name}/issues"
 license="LGPL-3.0-or-later"
 
@@ -17,7 +17,7 @@ license="LGPL-3.0-or-later"
 [[dependencies.${mod_id}]]
     modId="forge"
     mandatory=true
-    versionRange="[31,)"
+    versionRange="[1,)"
     ordering="NONE"
     side="BOTH"
 
@@ -25,13 +25,6 @@ license="LGPL-3.0-or-later"
     modId="minecraft"
     mandatory=true
     versionRange="[${minor_mc_version},)"
-    ordering="NONE"
-    side="BOTH"
-
-[[dependencies.${mod_id}]]
-    modId="textile"
-    mandatory=true
-    versionRange="*"
     ordering="NONE"
     side="BOTH"
 

@@ -1,1 +1,0 @@
-net.minecraft.client.resources.data.MetadataSerializer net.minecraft.client.resources.data.IMetadataSerializer

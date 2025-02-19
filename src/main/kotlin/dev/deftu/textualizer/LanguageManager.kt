@@ -63,6 +63,7 @@ public object LanguageManager : SynchronousResourceReloader {
         }
 
         val resourceManager = OmniClient.getInstance().resourceManager
+        reload(resourceManager)
         if (resourceManager is ReloadableResourceManagerImpl) {
             resourceManager.registerReloader(this)
             isInitialized = true
@@ -162,7 +163,7 @@ public object LanguageManager : SynchronousResourceReloader {
             }
 
             // Attempt to load through class loader using mod IDs
-            for (modId in OmniLoader.getLoadedMods().map(OmniLoader.ModInfo::id)) {
+            for (modId in OmniLoader.loadedMods.map(OmniLoader.ModInfo::id)) {
                 val fullPath = "/assets/$modId/$path"
                 if (fullPath in loadedPaths) {
                     if (isTranslationDebug) {

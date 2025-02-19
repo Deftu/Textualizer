@@ -7,7 +7,6 @@
         "defaultRequire": 1
     },
     "client": [
-        "client.Mixin_InitializeLanguageManager",
         "client.Mixin_ReplaceVanillaI18n",
         "client.Mixin_ReplaceVanillaTranslationStorage"
     ]

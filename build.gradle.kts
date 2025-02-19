@@ -9,6 +9,7 @@ plugins {
     id("dev.deftu.gradle.multiversion")
     id("dev.deftu.gradle.tools")
     id("dev.deftu.gradle.tools.resources")
+    id("dev.deftu.gradle.tools.bloom")
     id("dev.deftu.gradle.tools.minecraft.api")
     id("dev.deftu.gradle.tools.minecraft.loom")
     id("dev.deftu.gradle.tools.publishing.maven")
@@ -21,6 +22,10 @@ toolkitLoomApi.setupTestClient()
 toolkitMultiversion.moveBuildsToRootProject.set(true)
 if (mcData.isForgeLike && mcData.version >= MinecraftVersion.VERSION_1_16_5) {
     toolkitLoomHelper.useKotlinForForge()
+
+    if (mcData.isForge) {
+        toolkitLoomHelper.useForgeMixin(modData.id)
+    }
 }
 
 toolkitReleases {
@@ -52,14 +57,21 @@ repositories {
 }
 
 dependencies {
-    val textileVersion = "0.5.1"
+    val textileVersion = "0.8.0"
     api("dev.deftu:textile:$textileVersion")
     modImplementation("dev.deftu:textile-$mcData:$textileVersion")
-    modImplementation("dev.deftu:omnicore-$mcData:0.9.0")
+    modImplementation("dev.deftu:omnicore-$mcData:0.13.0")
 
     if (mcData.isFabric) {
-        modImplementation("net.fabricmc.fabric-api:fabric-api:${mcData.dependencies.fabric.fabricApiVersion}")
         modImplementation("net.fabricmc:fabric-language-kotlin:${mcData.dependencies.fabric.fabricLanguageKotlinVersion}")
+
+        if (mcData.isLegacyFabric) {
+            // 1.8.9 - 1.13
+            modImplementation("net.legacyfabric.legacy-fabric-api:legacy-fabric-api:${mcData.dependencies.legacyFabric.legacyFabricApiVersion}")
+        } else {
+            // 1.16.5+
+            modImplementation("net.fabricmc.fabric-api:fabric-api:${mcData.dependencies.fabric.fabricApiVersion}")
+        }
     } else if (mcData.isForgeLike) {
         implementation("cpw.mods:modlauncher:8.1.3")
     }

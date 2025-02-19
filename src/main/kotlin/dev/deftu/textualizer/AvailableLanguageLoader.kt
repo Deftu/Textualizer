@@ -24,6 +24,7 @@ public object AvailableLanguageLoader {
     @ApiStatus.Internal
     public fun getResourcePacks(resourceManager: ResourceManager): Collection<ResourcePack> {
         //#if MC >= 1.16.5
+        @Suppress("RedundantSuppression", "Since15")
         return resourceManager.streamResourcePacks().toList()
         //#else
         //$$ return getResourcePacks()
@@ -78,7 +79,7 @@ public object AvailableLanguageLoader {
     @ApiStatus.Internal
     public fun loadFromLanguageDefinition(definition: LanguageDefinition): LanguageMetadata {
         return LanguageMetadata(
-            //#if FABRIC
+            //#if FABRIC && MC >= 1.16.5
             //#if MC >= 1.19.3
             definition.comp_1198.lowercase(Locale.US),
             definition.comp_1199.lowercase(Locale.US),
@@ -105,7 +106,13 @@ public object AvailableLanguageLoader {
 
     //#if MC <= 1.12.2
     //$$ private fun getResourcePacks(): List<IResourcePack> {
-    //$$     val result = mutableListOf<IResourcePack>(OmniClient.getInstance().defaultResourcePack)
+    //$$     val result = mutableListOf<IResourcePack>(
+    //#if FORGE && MC == 1.8.9
+    //$$             OmniClient.getInstance().mcDefaultResourcePack
+    //#else
+    //$$             OmniClient.getInstance().defaultResourcePack
+    //#endif
+    //$$     )
     //$$     val packRepository = OmniClient.getInstance().resourcePackRepository
     //$$     for (entry in packRepository.repositoryEntries) {
     //$$         result.add(entry.resourcePack)
@@ -142,6 +149,15 @@ public object AvailableLanguageLoader {
     //$$     field.isAccessible = true
     //$$     return field.get(this) as String
     //$$ }
+    //$$
+    //#if FABRIC
+    //$$ private val MinecraftClient.defaultResourcePack: ResourcePack
+    //$$     get() {
+    //$$         val field = MinecraftClient::class.java.getDeclaredField("defaultResourcePack")
+    //$$         field.isAccessible = true
+    //$$         return field.get(this) as ResourcePack
+    //$$     }
+    //#endif
     //#endif
 
 }
