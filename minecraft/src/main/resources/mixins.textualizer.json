@@ -1,0 +1,13 @@
+{
+    "required": true,
+    "package": "dev.deftu.textualizer.mixins",
+    "compatibilityLevel": "${java_version}",
+    "plugin": "dev.deftu.textualizer.minecraft.mixins.MixinPlugin",
+    "injectors": {
+        "defaultRequire": 1
+    },
+    "client": [
+        "client.Mixin_ReplaceVanillaI18n",
+        "client.Mixin_ReplaceVanillaTranslationStorage"
+    ]
+}

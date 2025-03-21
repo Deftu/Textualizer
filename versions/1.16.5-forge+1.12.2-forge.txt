@@ -1,8 +1,0 @@
-net.minecraft.server.packs.resources.SimpleReloadableResourceManager net.minecraft.client.resources.SimpleReloadableResourceManager
-net.minecraft.server.packs.resources.ResourceManagerReloadListener net.minecraft.client.resources.IResourceManagerReloadListener
-net.minecraft.server.packs.resources.ResourceManager net.minecraft.client.resources.IResourceManager
-net.minecraft.server.packs.resources.ResourceManager getNamespaces() getResourceDomains()
-net.minecraft.server.packs.resources.ResourceManager getResources() getAllResources()
-net.minecraft.server.packs.PackResources net.minecraft.client.resources.IResourcePack
-net.minecraft.client.resources.language.LanguageInfo net.minecraft.client.resources.Language
-net.minecraft.client.resources.language.LanguageInfo getCode() getLanguageCode()

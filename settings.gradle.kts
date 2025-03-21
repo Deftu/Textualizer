@@ -22,21 +22,23 @@ pluginManagement {
 
     plugins {
         kotlin("jvm") version("2.0.0")
-        id("dev.deftu.gradle.multiversion-root") version("2.25.0")
+        id("dev.deftu.gradle.multiversion-root") version("2.28.0")
     }
 }
 
 val projectName: String = extra["mod.name"]?.toString()
     ?: throw MissingPropertyException("mod.name has not been set.")
 rootProject.name = projectName
-rootProject.buildFileName = "root.gradle.kts"
 
+// Minecraft implementation
+include(":minecraft")
+project(":minecraft").buildFileName = "root.gradle.kts"
 listOf(
-    "1.8.9-fabric",
     "1.8.9-forge",
+    "1.8.9-fabric",
 
-    "1.12.2-fabric",
     "1.12.2-forge",
+    "1.12.2-fabric",
 
     "1.16.5-forge",
     "1.16.5-fabric",
@@ -56,10 +58,6 @@ listOf(
     "1.20.1-forge",
     "1.20.1-fabric",
 
-    "1.20.2-forge",
-    "1.20.2-neoforge",
-    "1.20.2-fabric",
-
     "1.20.4-forge",
     "1.20.4-neoforge",
     "1.20.4-fabric",
@@ -70,12 +68,18 @@ listOf(
     "1.21.1-neoforge",
     "1.21.1-fabric",
 
+    "1.21.2-neoforge",
+    "1.21.2-fabric",
+
+    "1.21.3-neoforge",
+    "1.21.3-fabric",
+
     "1.21.4-neoforge",
     "1.21.4-fabric"
 ).forEach { version ->
-    include(":$version")
-    project(":$version").apply {
-        projectDir = file("versions/$version")
+    include(":minecraft:$version")
+    project(":minecraft:$version").apply {
+        projectDir = file("minecraft/versions/$version")
         buildFileName = "../../build.gradle.kts"
     }
 }
