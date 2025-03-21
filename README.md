@@ -1,5 +1,6 @@
 # Textualizer
-An extension upon Textile which has it’s own custom I18n implementation.
+
+Custom localization solution for all Minecraft versions.
 
 ---
 
@@ -7,6 +8,18 @@ An extension upon Textile which has it’s own custom I18n implementation.
 [![Ko-Fi Badge](https://raw.githubusercontent.com/intergrav/devins-badges/v2/assets/cozy/donate/kofi-singular_64h.png)](https://s.deftu.dev/kofi)
 
 ---
+
+# For users
+
+## Why do I need this?
+Minecraft's (and Forge's) language management system is very buggy and inconsistent across several Minecraft versions. This library aims to provide a consistent and reliable way to manage translations in your mods.
+
+## Is it going to affect my FPS / performance?
+No. The library doesn't add anything which would affect performance outside of the initial loading of the translations and language switching.
+
+---
+
+# For developers
 
 ## Setup
 
@@ -26,30 +39,17 @@ Of course, replace `<MINECRAFT VERSION>` with the version of Minecraft you are d
 
 To create a translated string, you can use
 ```java
-import dev.deftu.textualizer.LanguageManager;
+import dev.deftu.textualizer.minecraft.MCLocalization;
 
-String text = LanguageManager.translate("com.example");
+String text = MCLocalization.get("com.example");
 ```
 
 To create a translated string with arguments, you can use
 ```java
-import dev.deftu.textualizer.LanguageManager;
+import dev.deftu.textualizer.MCLocalization;
 
 int number = 10;
-String text = LanguageManager.translate("com.example", number);
-```
-
-## Interopability with Textile
-
-Textualizer provides implementations of `TextHolder` and `MutableTextHolder` (or, more specifically, `SimpleTextHolder` and `SimpleMutableTextHolder`)
-```java
-import dev.deftu.textile.TextHolder;
-import dev.deftu.textile.MutableTextHolder;
-import dev.deftu.textualizer.text.TextualizerTextHolder;
-import dev.deftu.textualizer.text.TextualizerMutableTextHolder;
-
-TextHolder text = new TextualizerTextHolder("com.example");
-MutableTextHolder mutableText = new TextualizerMutableTextHolder("com.example");
+String text = MCLocalization.get("com.example", number);
 ```
 
 ---
@@ -58,7 +58,7 @@ MutableTextHolder mutableText = new TextualizerMutableTextHolder("com.example");
 
 ---
 
-**This project is licensed under [LGPL-3.0][lgpl3].**\
+**This project is licensed under [LGPL-3.0][lgpl3].**  
 **&copy; 2024 Deftu**
 
 [lgpl3]: https://www.gnu.org/licenses/lgpl-3.0.en.html
