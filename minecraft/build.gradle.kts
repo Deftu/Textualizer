@@ -1,5 +1,7 @@
 import com.modrinth.minotaur.dependencies.DependencyType
 import com.modrinth.minotaur.dependencies.ModDependency
+import dev.deftu.gradle.tools.minecraft.CurseRelation
+import dev.deftu.gradle.tools.minecraft.CurseRelationType
 import dev.deftu.gradle.utils.version.MinecraftVersions
 import dev.deftu.gradle.utils.ModLoader
 
@@ -32,21 +34,33 @@ toolkitReleases {
 
     modrinth {
         projectId.set("UhitUcEo")
-        if (mcData.loader == ModLoader.FABRIC) {
-            dependencies.addAll(listOf(
-                ModDependency("P7dR8mSH", DependencyType.REQUIRED),                     // Fabric API
-                ModDependency("Ha28R6CL", DependencyType.REQUIRED),                     // Fabric Language Kotlin
-                ModDependency("mOgUt4GM", DependencyType.OPTIONAL)                      // Mod Menu
-            ))
-        } else if (mcData.version >= MinecraftVersions.VERSION_1_16_5) {
-            dependencies.addAll(listOf(
-                ModDependency("ordsPcFz", DependencyType.REQUIRED)                      // Kotlin for Forge
-            ))
-        }
+        dependencies.add(ModDependency("textile-lib", DependencyType.REQUIRED))
+        dependencies.add(ModDependency("omnicore", DependencyType.REQUIRED))
 
         if (mcData.version >= MinecraftVersions.VERSION_1_16_5) {
-            dependencies.add(ModDependency("T0Zb6DLv", DependencyType.REQUIRED))        // Textile
-            dependencies.add(ModDependency("MaDESStl", DependencyType.REQUIRED))        // Omnicore
+            val kotlinWrapperId = if (mcData.isForgeLike) "kotlin-for-forge" else "fabric-language-kotlin"
+            dependencies.add(ModDependency(kotlinWrapperId, DependencyType.REQUIRED))
+        }
+
+        if (mcData.isFabric) {
+            val fapiId = if (mcData.isLegacyFabric) "legacy-fabric-api" else "fabric-api"
+            dependencies.add(ModDependency(fapiId, DependencyType.REQUIRED))
+        }
+    }
+
+    curseforge {
+        projectId.set("1224882")
+        relations.add(CurseRelation("textile", CurseRelationType.REQUIRED))
+        relations.add(CurseRelation("omnicore", CurseRelationType.REQUIRED))
+
+        if (mcData.version >= MinecraftVersions.VERSION_1_16_5) {
+            val kotlinWrapperId = if (mcData.isForgeLike) "kotlin-for-forge" else "fabric-language-kotlin"
+            relations.add(CurseRelation(kotlinWrapperId, CurseRelationType.REQUIRED))
+        }
+
+        if (mcData.isFabric) {
+            val fapiId = if (mcData.isLegacyFabric) "legacy-fabric-api" else "fabric-api"
+            relations.add(CurseRelation(fapiId, CurseRelationType.REQUIRED))
         }
     }
 }
