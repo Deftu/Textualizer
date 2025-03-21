@@ -16,7 +16,7 @@
     "environment": "*",
     "entrypoints": {
         "main": [
-            "dev.deftu.textualizer.TextualizerEntrypoint"
+            "dev.deftu.textualizer.minecraft.TextualizerEntrypoint"
         ]
     },
     "mixins": [

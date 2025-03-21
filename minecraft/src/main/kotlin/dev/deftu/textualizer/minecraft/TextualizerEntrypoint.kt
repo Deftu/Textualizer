@@ -1,10 +1,14 @@
-package dev.deftu.textualizer
+package dev.deftu.textualizer.minecraft
 
-import dev.deftu.textualizer.minecraft.MCResourceManager
 import org.apache.logging.log4j.LogManager
 
 //#if FABRIC
 import net.fabricmc.api.ModInitializer
+//#if MC >= 1.16.5
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
+//#else
+//$$ import net.legacyfabric.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents
+//#endif
 //#elseif FORGE
 //#if MC >= 1.16.5
 //$$ import net.minecraftforge.eventbus.api.IEventBus
@@ -67,7 +71,14 @@ public class TextualizerEntrypoint
         //#endif
     ) {
         logger.info("Initializing @MOD_NAME@ @MOD_VERSION@")
+
+        //#if FABRIC
+        ClientLifecycleEvents.CLIENT_STARTED.register { _ ->
+        //#endif
         MCResourceManager.initialize()
+        //#if FABRIC
+        }
+        //#endif
     }
 
     //#if FORGE-LIKE && MC >= 1.16.5
