@@ -5,7 +5,7 @@ import dev.deftu.textile.minecraft.MCSimpleMutableTextHolder
 public class MCLocalizedMutableTextHolder(
     public val key: String,
     public val replacements: Array<out Any>
-) : MCSimpleMutableTextHolder(MCLocalization.get(key, *replacements)) {
+) : MCSimpleMutableTextHolder(MCLocalization.current().get(key, *replacements)) {
 
     public constructor(key: String): this(key, emptyArray())
 

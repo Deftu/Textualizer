@@ -13,16 +13,16 @@ public class Mixin_ReplaceVanillaI18n {
 
     @Inject(method = "translate", at = @At("HEAD"), cancellable = true)
     private static void textualizer$translate(String key, Object[] replacements, CallbackInfoReturnable<String> cir) {
-        if (!MCLocalization.INSTANCE.isTranslated(key)) {
+        if (!MCLocalization.INSTANCE.current().isTranslated(key)) {
             return;
         }
 
-        cir.setReturnValue(MCLocalization.INSTANCE.get(key, replacements));
+        cir.setReturnValue(MCLocalization.INSTANCE.current().get(key, replacements));
     }
 
     @Inject(method = "hasTranslation", at = @At("HEAD"), cancellable = true)
     private static void textualizer$hasTranslation(String key, CallbackInfoReturnable<Boolean> cir) {
-        if (!MCLocalization.INSTANCE.isTranslated(key)) {
+        if (!MCLocalization.INSTANCE.current().isTranslated(key)) {
             return;
         }
 

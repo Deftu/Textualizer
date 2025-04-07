@@ -13,11 +13,11 @@ public class Mixin_ReplaceVanillaLanguage {
 
     @Inject(method = "get(Ljava/lang/String;)Ljava/lang/String;", at = @At("HEAD"), cancellable = true)
     private void textualizer$get(String key, CallbackInfoReturnable<String> cir) {
-        if (!MCLocalization.INSTANCE.isTranslated(key)) {
+        if (!MCLocalization.INSTANCE.current().isTranslated(key)) {
             return;
         }
 
-        cir.setReturnValue(MCLocalization.INSTANCE.get(key));
+        cir.setReturnValue(MCLocalization.INSTANCE.current().get(key));
     }
 
 }

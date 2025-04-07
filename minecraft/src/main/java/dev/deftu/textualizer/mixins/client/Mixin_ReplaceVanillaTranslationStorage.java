@@ -19,16 +19,16 @@ public class Mixin_ReplaceVanillaTranslationStorage {
             //#endif
             CallbackInfoReturnable<String> cir
     ) {
-        if (!MCLocalization.INSTANCE.isTranslated(key)) {
+        if (!MCLocalization.INSTANCE.current().isTranslated(key)) {
             return;
         }
 
-        cir.setReturnValue(MCLocalization.INSTANCE.get(key));
+        cir.setReturnValue(MCLocalization.INSTANCE.current().get(key));
     }
 
     @Inject(method = "hasTranslation", at = @At("HEAD"), cancellable = true)
     private void textualizer$hasTranslation(String key, CallbackInfoReturnable<Boolean> cir) {
-        if (!MCLocalization.INSTANCE.isTranslated(key)) {
+        if (!MCLocalization.INSTANCE.current().isTranslated(key)) {
             return;
         }
 
