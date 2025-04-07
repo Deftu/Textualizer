@@ -22,12 +22,12 @@ pluginManagement {
 
     plugins {
         kotlin("jvm") version("2.0.0")
-        id("dev.deftu.gradle.multiversion-root") version("2.28.0")
+        id("dev.deftu.gradle.multiversion-root") version("2.30.0")
     }
 }
 
-val projectName: String = extra["mod.name"]?.toString()
-    ?: throw MissingPropertyException("mod.name has not been set.")
+val projectName: String = extra["project.name"]?.toString()
+    ?: throw MissingPropertyException("project.name has not been set.")
 rootProject.name = projectName
 
 // Minecraft implementation
