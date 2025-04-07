@@ -1,6 +1,8 @@
 # Textualizer
 
-Custom localization solution for all Minecraft versions.
+A simple localization management library.
+
+Features a Minecraft-specific implementation for mod developers, wrapping around Minecraft's own localization system.
 
 ---
 
@@ -9,17 +11,42 @@ Custom localization solution for all Minecraft versions.
 
 ---
 
-# For users
+# For developers
+
+## Setup
+
+You need to add it as a dependency in your `build.gradle(.kts)` file.
+```kt
+repositories {
+    maven("https://maven.deftu.dev/releases")
+}
+
+dependencies {
+    modImplementation("dev.deftu:textualizer:<VERSION>")
+}
+```
+
+Replace `<VERSION>` with the version of the library you want to use.
+
+## Usage
+
+You'll need to implement `Language`, `LocalizationContext`, and `Localization` in your project. This means you need to handle language metadata, translation loading, translation retrieval, placeholder replacement, and language switching.
+
+Refer to the [Minecraft-specific implementation](/minecraft/src/main/kotlin/dev/deftu/textualizer/minecraft) for an example of how to do this.
+
+---
+
+# For Minecraft mod users
 
 ## Why do I need this?
 Minecraft's (and Forge's) language management system is very buggy and inconsistent across several Minecraft versions. This library aims to provide a consistent and reliable way to manage translations in your mods.
 
 ## Is it going to affect my FPS / performance?
-No. The library doesn't add anything which would affect performance outside of the initial loading of the translations and language switching.
+No. The library doesn't add anything which would affect performance outside the initial loading of the translations and language switching.
 
 ---
 
-# For developers
+# For Minecraft mod developers
 
 ## Setup
 
@@ -37,19 +64,28 @@ Of course, replace `<MINECRAFT VERSION>` with the version of Minecraft you are d
 
 ## Usage
 
-To create a translated string, you can use
+Getting the current (selected in-game) language's context can be done like so:
 ```java
 import dev.deftu.textualizer.minecraft.MCLocalization;
 
-String text = MCLocalization.get("com.example");
+LocalizationContext context = MCLocalization.current();
 ```
 
-To create a translated string with arguments, you can use
+To obtain a translated string, you can use
+```java
+import dev.deftu.textualizer.minecraft.MCLocalization;
+
+LocalizationContext context = MCLocalization.current();
+String text = context.get("com.example");
+```
+
+To obtain a translated string and replace your placeholders, you can use
 ```java
 import dev.deftu.textualizer.MCLocalization;
 
 int number = 10;
-String text = MCLocalization.get("com.example", number);
+LocalizationContext context = MCLocalization.current();
+String text = context.get("com.example", number);
 ```
 
 ---
