@@ -1,0 +1,5 @@
+[versions]
+textile = "0.15.0"
+
+[libraries]
+textile = { group = "dev.deftu", name = "textile", version.ref = "textile" }

@@ -72,10 +72,10 @@ repositories {
 dependencies {
     api(project(":"))
 
-    val textileVersion = "0.11.1"
+    val textileVersion = rootProject.libs.versions.textile.get()
     api("dev.deftu:textile:$textileVersion")
     modImplementation("dev.deftu:textile-$mcData:$textileVersion")
-    modImplementation("dev.deftu:omnicore-$mcData:0.24.2")
+    modImplementation("dev.deftu:omnicore-$mcData:0.28.0")
 
     if (mcData.isFabric) {
         modImplementation("net.fabricmc:fabric-language-kotlin:${mcData.dependencies.fabric.fabricLanguageKotlinVersion}")

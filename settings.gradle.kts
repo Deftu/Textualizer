@@ -1,36 +1,35 @@
-import groovy.lang.MissingPropertyException
-
 pluginManagement {
     repositories {
+        // Snapshots
+        maven("https://maven.deftu.dev/snapshots")
+        maven("https://s01.oss.sonatype.org/content/groups/public/")
+
         // Repositories
         maven("https://maven.deftu.dev/releases")
         maven("https://maven.fabricmc.net")
         maven("https://maven.architectury.dev/")
         maven("https://maven.minecraftforge.net")
         maven("https://repo.essential.gg/repository/maven-public")
-        maven("https://server.bbkr.space/artifactory/libs-release/")
         maven("https://jitpack.io/")
-
-        // Snapshots
-        maven("https://maven.deftu.dev/snapshots")
-        mavenLocal()
 
         // Default repositories
         gradlePluginPortal()
         mavenCentral()
+        mavenLocal()
     }
 
     plugins {
-        kotlin("jvm") version("2.0.0")
-        id("dev.deftu.gradle.multiversion-root") version("2.30.0")
+        id("dev.deftu.gradle.multiversion-root") version("2.34.0")
     }
 }
 
-val projectName: String = extra["project.name"]?.toString()
-    ?: throw MissingPropertyException("project.name has not been set.")
-rootProject.name = projectName
+plugins {
+    id("org.gradle.toolchains.foojay-resolver-convention") version ("0.8.+")
+}
 
-// Minecraft implementation
+rootProject.name = extra["project.name"]?.toString() ?: throw IllegalStateException("project.name is not defined")
+
+// Setup Minecraft
 include(":minecraft")
 project(":minecraft").buildFileName = "root.gradle.kts"
 listOf(
@@ -75,7 +74,10 @@ listOf(
     "1.21.3-fabric",
 
     "1.21.4-neoforge",
-    "1.21.4-fabric"
+    "1.21.4-fabric",
+
+    "1.21.5-neoforge",
+    "1.21.5-fabric"
 ).forEach { version ->
     include(":minecraft:$version")
     project(":minecraft:$version").apply {
